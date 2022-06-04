@@ -13,8 +13,8 @@ interface Prefecture {
   prefCode: string;
   prefName: string;
 }
-let selectedPrefCodeList: any = [];                                                 //  「都道府県一覧」チェックリスト
-let series_value: any = [];
+                        
+let series_value: any = [];           //  「都道府県一覧」グラフデータ
             
 const Home: NextPage = () => {
   const apikey = '4PEGxNuvFwDzAGtJQcwKGy3iSmJgp3yNElwSpux5';                        //  RESAS(地域経済分析システム) API Key
@@ -37,6 +37,7 @@ const Home: NextPage = () => {
       .then(res => res.json())
       .then(
         (result) => {
+          series_value = [];
           SetPrefecture(result);
           SetPopulation({                 
             xAxis: {          
@@ -87,8 +88,9 @@ const Home: NextPage = () => {
         .then(res => res.json())
         .then(
           (result) => {
-            const yearvalue: any = [];
-            const categorie_names: any = [];
+            console.log(result);
+            let yearvalue: any = [];
+            let categorie_names: any = [];
             
             result.result.data[0].data.map( (year_value:any) => {
               yearvalue.push(year_value.value);
@@ -115,10 +117,15 @@ const Home: NextPage = () => {
     }
     else {
       //  チェック解除した都道府県のグラフデータ削除
-      series_value = series_value.filter((item: any) => item.name !== prefecture_name);
-      SetPopulation({ 
-        series: series_value
+      let new_value: any = [];
+      series_value.map( (item:any) => {
+        if(item.name !== prefecture_name)
+          new_value.push(item);
       });
+      SetPopulation({ 
+        series: new_value
+      });
+      series_value = new_value;
     }
   }
 
