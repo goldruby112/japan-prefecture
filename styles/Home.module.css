@@ -71,6 +71,10 @@
   display: none;
 }
 
+.population_graph {
+  width: 100%;
+}
+
 @media (max-width: 600px) {
   .prefectures_itemlist {
     grid-template-columns: repeat(3,1fr);
