@@ -122,6 +122,7 @@ const Home: NextPage = () => {
         if(item.name !== prefecture_name)
           new_value.push(item);
       });
+      //  グラフ値の設定
       SetPopulation({ 
         series: new_value
       });
