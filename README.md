@@ -28,3 +28,9 @@ npm run dev
 ## Vercelで実行結果を確認する
 
 [https://japan-prefecture.vercel.app/](https://japan-prefecture.vercel.app/)で確認できます。
+
+<div align="center">
+  <a href="https://japan-prefecture.vercel.app/">
+    <img src="images/screenshot.png" alt="Logo" width="100%">
+  </a>
+</div>
