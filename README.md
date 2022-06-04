@@ -31,6 +31,6 @@ npm run dev
 
 <div align="center">
   <a href="https://japan-prefecture.vercel.app/">
-    <img src="images/screenshot.png" alt="Logo" width="100%">
+    <img src="image/screenshot.png" alt="Logo" width="100%">
   </a>
 </div>
