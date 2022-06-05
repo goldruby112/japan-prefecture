@@ -1,34 +1,44 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
-import styles from '../styles/Home.module.css'
 import Checkbox from './components/checkbox'
-
-// Highcharts　インポート
+// Highchartsインポート
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+// Style
+import styles from '../styles/Home.module.css'
 
+// Interface
 interface Prefecture {  
   prefCode: string;
   prefName: string;
 }
-                        
-let series_value: any = [];           //  「都道府県一覧」グラフデータ
+
+interface PopData {
+  year: number;
+  value: number;
+}
+
+interface SeriesItem {
+  name: string;
+  data: Array<number>;
+}
+
+                 
+const API_KEY = '4PEGxNuvFwDzAGtJQcwKGy3iSmJgp3yNElwSpux5'; //  RESAS(地域経済分析システム) API Key
+let series_value: SeriesItem[] = []; //  「都道府県一覧」グラフデータ
             
 const Home: NextPage = () => {
-  const apikey = '4PEGxNuvFwDzAGtJQcwKGy3iSmJgp3yNElwSpux5';                        //  RESAS(地域経済分析システム) API Key
   const url_prefectures = 'https://opendata.resas-portal.go.jp/api/v1/prefectures'; //  「都道府県一覧」獲得 URL
   const url_population  = 'https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?prefCode=';   //  「総人口」獲得 URL
 
   const requestMetadata = {                                                         //  RESAS(地域経済分析システム) APIのヘッダー
     method: 'GET',
     headers: {
-        'X-API-KEY': apikey
+        'X-API-KEY': API_KEY
     },
   };
   
-  const [ guideswitch, SetGuideSwitch ] = useState('display');        //  説明文の表示 (「都道府県を選択してください。」)
   const [ prefecture, SetPrefecture ]   = useState({ result: [] });   //  都道府県一覧
   const [ population, SetPopulation ]   = useState({});               //  人口グラフ
   
@@ -68,13 +78,13 @@ const Home: NextPage = () => {
       )
   }, []);
   
-  const handleChange = (evt: any): void => {
+  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>): void => {
     const target = evt.target;
     const checked = target.checked;
     const value = target.value;
 
     //  選択した都道府県名
-    let prefecture_name: string = '';
+    let prefecture_name = '';
     prefecture.result.map((item: Prefecture) => {
       if(item.prefCode == value) {
         prefecture_name = item.prefName;
@@ -88,11 +98,10 @@ const Home: NextPage = () => {
         .then(res => res.json())
         .then(
           (result) => {
-            console.log(result);
-            let yearvalue: any = [];
-            let categorie_names: any = [];
+            const yearvalue: number[] = [];
+            const categorie_names: number[] = [];
             
-            result.result.data[0].data.map( (year_value:any) => {
+            result.result.data[0].data.map( (year_value: PopData) => {
               yearvalue.push(year_value.value);
               categorie_names.push(year_value.year);
             })
@@ -117,8 +126,8 @@ const Home: NextPage = () => {
     }
     else {
       //  チェック解除した都道府県のグラフデータ削除
-      let new_value: any = [];
-      series_value.map( (item:any) => {
+      const new_value: SeriesItem[] = [];
+      series_value.map( (item: SeriesItem) => {
         if(item.name !== prefecture_name)
           new_value.push(item);
       });
